@@ -308,6 +308,11 @@ document.addEventListener("click", (e) => {
     const answers = [...record(id).answers];
     answers[Number(index)] = value === "true";
     update(id, { answers });
+    const reviewCount = document.querySelector('[data-filter="again"] span');
+    if (reviewCount) reviewCount.textContent = course.lessons.reduce(
+      (n, lesson) => n + record(lesson.id).answers.filter(answer => answer === false).length,
+      0,
+    );
     grade
       .closest(".self-grade")
       .querySelectorAll("button")
@@ -337,6 +342,11 @@ $("#menu").onclick = () => {
   );
 };
 $("#records").onclick = openRecords;
+$(".skip-link").onclick = (event) => {
+  event.preventDefault();
+  $("#main").focus();
+  $("#main").scrollIntoView();
+};
 addEventListener("hashchange", route);
 addEventListener("storage", (e) => {
   if (e.key === KEY) {
