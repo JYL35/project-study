@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f4ef" />
+    <meta
+      name="description"
+      content="프로젝트에서 배운 로깅, 메트릭, 알림. 짧게 읽고 직접 실습하며 나의 지식으로 만드세요."
+    />
+    <title>Project Study · 프로젝트에서 배운 것들</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 이동</a>
+    <aside class="sidebar" id="sidebar" aria-label="학습 탐색"></aside>
+    <div class="page">
+      <header class="topbar">
+        <button
+          class="icon-button mobile-menu"
+          id="menu"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+        <span class="breadcrumb"
+          >나의 학습 공간 <span>/</span> <b id="crumb">홈</b></span
+        >
+        <button class="text-button" id="records">
+          학습 기록 <span aria-hidden="true">↗</span>
+        </button>
+      </header>
+      <main id="main" tabindex="-1">
+        <p class="loading">학습 공간을 준비하고 있어요.</p>
+      </main>
+      <footer class="footer">
+        <span>작게 배우고, 직접 확인하고, 내 말로 설명하기.</span
+        ><span>PROJECT STUDY · 2026</span>
+      </footer>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <dialog id="records-dialog" aria-labelledby="records-title"></dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
