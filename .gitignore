@@ -8,3 +8,4 @@ dist/
 .sites-runtime/
 *.tar.gz
 *.tgz
+.study/

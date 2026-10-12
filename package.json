@@ -8,6 +8,8 @@
     "node": ">=22"
   },
   "scripts": {
+    "context": "node scripts/context.mjs",
+    "study:record": "node scripts/record-study.mjs",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/dev.mjs",
     "check": "node --test && node scripts/build.mjs --check"

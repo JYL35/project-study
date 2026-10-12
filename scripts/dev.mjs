@@ -44,7 +44,7 @@ server.listen(port, "127.0.0.1", () =>
   console.log(`Local: http://127.0.0.1:${port}`),
 );
 let timer;
-for (const dir of ["content", "src"])
+for (const dir of ["content", "src", "learning"])
   watch(resolve(root, dir), { recursive: true }, () => {
     clearTimeout(timer);
     timer = setTimeout(build, 150);

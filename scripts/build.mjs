@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { marked } from "marked";
+import { loadStudy } from "./lib/study.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const curriculum = JSON.parse(
@@ -52,12 +53,55 @@ for (const lesson of curriculum.lessons) {
     throw new Error(`${lesson.id}: 실습 필요`);
   for (const q of lesson.quiz)
     if (!q.q || !q.a) throw new Error(`${lesson.id}: 빈 질문/답변`);
+  const tutor = JSON.parse(
+    await readFile(resolve(root, `content/tutoring/${lesson.id}.json`), "utf8"),
+  );
+  if (
+    !tutor.opening ||
+    !Array.isArray(tutor.exitQuestions) ||
+    tutor.exitQuestions.length < 2 ||
+    !Array.isArray(tutor.rubric) ||
+    tutor.rubric.length !== lesson.goals.length ||
+    !tutor.exercise?.route ||
+    !Array.isArray(tutor.misconceptions)
+  )
+    throw new Error(
+      `${lesson.id}: 튜터 진단·확인 질문·목표 기준이 필요합니다.`,
+    );
   lessons.push({
     ...lesson,
     body,
     html: await marked.parse(body, { renderer }),
   });
 }
+const { profile, sessions } = await loadStudy(root);
+// 노트의 HTML·위험한 링크는 실행하지 않는다. 학습 데이터도 공개 콘텐츠다.
+const noteRenderer = new marked.Renderer();
+noteRenderer.html = renderer.html;
+const escapeHtml = (value) =>
+  String(value).replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ],
+  );
+noteRenderer.link = function ({ href, tokens }) {
+  const label = this.parser.parseInline(tokens);
+  return /^https:\/\//.test(href)
+    ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`
+    : label;
+};
+noteRenderer.image = ({ text }) => escapeHtml(text);
+const study = {
+  learner: profile.learner,
+  sessions: await Promise.all(
+    sessions.map(async (s) => ({
+      ...s,
+      html: await marked.parse(s.note, { renderer: noteRenderer }),
+    })),
+  ),
+};
 if (process.argv.includes("--check")) {
   console.log(
     `검증 완료: 주제 ${lessons.length}개 · 복습 질문 ${lessons.reduce((n, l) => n + l.quiz.length, 0)}개 · 연결 유효`,
@@ -69,7 +113,7 @@ if (process.argv.includes("--check")) {
   await cp(resolve(root, "src"), out, { recursive: true });
   await writeFile(
     resolve(out, "data.json"),
-    JSON.stringify({ ...curriculum, lessons }),
+    JSON.stringify({ ...curriculum, lessons, study }),
   );
   console.log(`빌드 완료: dist/ · 주제 ${lessons.length}개`);
 }

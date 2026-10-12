@@ -1,0 +1,4 @@
+interface:
+  display_name: "Study"
+  short_description: "답변에서 이해를 진단하고 교정하며 프로젝트 학습 결과를 기록합니다"
+  default_prompt: "$study로 내 다음 주제를 질문 하나부터 학습하고 결과를 사이트에 반영해 줘."

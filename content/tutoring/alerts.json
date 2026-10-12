@@ -1,0 +1,33 @@
+{
+  "opening": "대시보드에서 5xx를 봤는데 Discord에는 알림이 없어요. 숫자가 생긴 뒤 사람에게 도착하는 경로를 어디까지 알고 있나요?",
+  "followups": [
+    "경보 조건을 만족하는 것과 메시지 전달이 성공하는 것은 어떻게 다른가요?",
+    "prod와 dev에서 같은 ALARM 메시지를 받았는데 멘션이 다른 이유를 Lambda 조건으로 설명해 주세요."
+  ],
+  "misconceptions": [
+    {
+      "claim": "현재 경보가 5xx 비율을 평가한다",
+      "probe": "조건의 histogram_count 합계 > 0에서 전체 요청 수로 나누는 부분이 있나요?",
+      "correction": "현재 경보는 수집 구간의 5xx 건수 > 0이다. 대시보드의 오류율 패널과 구분한다."
+    },
+    {
+      "claim": "SNS 테스트가 왔으니 5xx부터 전체 자동 경보가 검증됐다",
+      "probe": "테스트 메시지는 어느 단계에서 주입됐나요? 그 앞 단계도 실행됐나요?",
+      "correction": "SNS 이후 전달 테스트와 실제 메트릭→ALARM 전이→메시지 도착 검증을 구분한다."
+    }
+  ],
+  "exercise": {
+    "route": "#/lesson/alerts",
+    "task": "prod에서 모의 5xx를 만들고 전달 단계를 진행한다. Lambda/Discord 실패 상태도 비교한다.",
+    "predict": "어느 단계에서 실패하면 경보 상태와 메시지 도착이 달라질지 묻는다.",
+    "observe": "SNS·Lambda·Discord를 나누어 관측하고 prod ALARM일 때만 역할 멘션이 붙는 조건을 설명하게 한다."
+  },
+  "exitQuestions": [
+    "CloudWatch는 ALARM인데 Discord는 조용해요. 경보 쿼리를 바꾸기 전에 어떤 경로와 증거부터 확인하겠어요?",
+    "prod 경보가 OK로 복구됐어요. 제공된 Lambda 코드에서 prod라는 이유만으로 역할 멘션이 붙을까요? 조건을 말해 주세요."
+  ],
+  "rubric": [
+    "5xx 건수 경보의 평가와 SNS→Lambda→Discord 전달 성공을 구분한다.",
+    "AlarmName의 prod 접두사와 NewStateValue=ALARM 두 조건이 모두 필요함을 설명한다."
+  ]
+}

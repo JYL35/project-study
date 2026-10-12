@@ -1,0 +1,33 @@
+{
+  "opening": "우리 백엔드가 처리한 요청 수는 어떤 단계를 거쳐 CloudWatch 그래프가 될까요? 각 단계가 맡은 일을 설명해 주세요.",
+  "followups": [
+    "계측, 수집, 저장을 담당하는 구성요소를 나눠 보세요.",
+    "이전 수집 때 누적 100건, 이번에 108건이면 이번 구간은 몇 건인가요? 재시작으로 누적값이 줄면 단순 뺄셈으로 충분할까요?"
+  ],
+  "misconceptions": [
+    {
+      "claim": "Prometheus 형식이면 별도 Prometheus 서버가 있다",
+      "probe": "형식을 읽는 역할과 오래 저장하는 역할은 각각 누구인가요?",
+      "correction": "총총은 Actuator Prometheus 형식을 ADOT으로 읽고 CloudWatch OTel에 저장한다. Prometheus 저장 서버나 AMP는 현재 구성에 없다."
+    },
+    {
+      "claim": "컨테이너 running이면 전송까지 성공이다",
+      "probe": "실행 중인 택배차가 있어도 도착을 확인하려면 무엇이 더 필요할까요? 실제 시스템 이름으로 설명해 보세요.",
+      "correction": "수집 대상 접근, exporter 오류, 인증과 네트워크, CloudWatch 최신 데이터 도착을 별도로 확인한다."
+    }
+  ],
+  "exercise": {
+    "route": "#/lesson/metrics",
+    "task": "누적 100건을 첫 수집하고 요청 8건을 더한 뒤 다시 수집한다.",
+    "predict": "첫 기준값과 다음 구간 증가분을 구분해 예측하게 한다.",
+    "observe": "두 번째 누적값과 전송할 구간값을 각각 읽고 cumulativetodelta의 역할을 설명하게 한다."
+  },
+  "exitQuestions": [
+    "누적 250건 다음에 265건이 수집됐어요. 우리 파이프라인에서 구간 요청 수는 무엇이고, 누가 변환하나요?",
+    "ADOT은 running인데 그래프가 끊겼어요. 계측→수집→전송 중 어디가 문제인지 어떤 증거로 나누겠어요?"
+  ],
+  "rubric": [
+    "Actuator/Micrometer 계측·ADOT 수집 및 전송·CloudWatch 저장을 구분한다.",
+    "누적과 구간값을 구분하며 초기 기준·재시작을 무시한 단순 계산을 일반화하지 않는다."
+  ]
+}
